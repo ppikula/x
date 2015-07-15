@@ -43,7 +43,7 @@ compile:
 	$(REBAR) skip_deps=true compile
 
 assert_full_coverage:
-	@grep --quiet "<tr><td><a href='x.COVER.html'>x</a></td><td>100%</td>" $(EUNIT_INDEX)
+	@grep --quiet "<tr><td><a href='x_jid.COVER.html'>x_jid</a></td><td>100%</td>" $(EUNIT_INDEX)
 
 doc:
 	-rm -rf doc
