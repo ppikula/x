@@ -1,0 +1,14 @@
+{application, x,
+ [
+  {description, "XMPP modeling toolkit"},
+  {vsn, "0.0.1"},
+  {modules, [
+             x
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
