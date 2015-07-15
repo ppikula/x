@@ -1,2 +1,2 @@
-# estanza
-XMPP stanza generators
+# X
+XMPP modeling toolkit
