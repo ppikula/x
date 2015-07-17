@@ -47,12 +47,12 @@ is_jid(_) -> false.
 
 -spec new(username(), domain(), resource()) -> full_jid().
 new(User, Domain, Resource) when is_binary(User), is_binary(Domain), is_binary(Resource) ->
-    %% FIXME check constraints
+    %% FIXME check contracts
     #full_jid{username = User, domain = Domain, resource = Resource}.
 
 -spec new(username(), domain()) -> bare_jid().
 new(User, Domain) when is_binary(User), is_binary(Domain) ->
-    %% FIXME check constraints
+    %% FIXME check contracts
     #bare_jid{username = User, domain = Domain}.
 
 -spec to_bin(jid()) -> binary().
@@ -103,57 +103,15 @@ is_same_resource(#full_jid{} = _JID1, #full_jid{} = _JID2) -> false.
 has_same_domain(JID1, JID2) ->
     domain(JID1) == domain(JID2).
 
--spec parse_jid_elements(binary()) -> {username(), domain()} | {username(), domain(), resource()} | error.
+-spec parse_jid_elements(binary()) -> {username(), domain()} |
+                                      {username(), domain(), resource()}.
 parse_jid_elements(Bin) ->
-    binary_to_jid(Bin).
+    [User, Rest] = binary:split(Bin, <<"@">>),
+    case binary:split(Rest, <<"/">>) of
+        [Domain] -> {User,Domain};
+        [Domain, Resource] -> {User,Domain,Resource}
+    end.
 
-binary_to_jid(J) ->
-    binary_to_jid1(J, <<>>).
-
-%% TODO: fix this shit
-binary_to_jid1(<<$@, _J/binary>>, <<>>) ->
-    error;
-binary_to_jid1(<<$@, J/binary>>, N) ->
-    binary_to_jid2(J, binary_reverse(N), <<>>);
-binary_to_jid1(<<$/, _J/binary>>, <<>>) ->
-    error;
-binary_to_jid1(<<$/, J/binary>>, N) ->
-    binary_to_jid3(J, <<>>, binary_reverse(N), <<>>);
-binary_to_jid1(<<C, J/binary>>, N) ->
-    binary_to_jid1(J, <<C, N/binary>>);
-binary_to_jid1(<<>>, <<>>) ->
-    error;
-binary_to_jid1(<<>>, N) ->
-    {<<>>, binary_reverse(N)}.
-
-
-%% @doc Only one "@" is admitted per JID ?
-binary_to_jid2(<<$@, _J/binary>>, _N, _S) ->
-    error;
-binary_to_jid2(<<$/, _J/binary>>, _N, <<>>) ->
-    error;
-binary_to_jid2(<<$/, J/binary>>, N, S) ->
-    binary_to_jid3(J, N, binary_reverse(S), <<>>);
-binary_to_jid2(<<C, J/binary>>, N, S) ->
-    binary_to_jid2(J, N, <<C, S/binary>>);
-binary_to_jid2(<<>>, _N, <<>>) ->
-    error;
-binary_to_jid2(<<>>, N, S) ->
-    {N, binary_reverse(S)}.
-
-
-binary_to_jid3(<<C, J/binary>>, N, S, R) ->
-    binary_to_jid3(J, N, S, <<C, R/binary>>);
-binary_to_jid3(<<>>, N, S, R) ->
-    {N, S, binary_reverse(R)}.
-
-
--spec binary_reverse(binary()) -> binary().
-binary_reverse(<<>>) ->
-    <<>>;
-binary_reverse(<<H,T/binary>>) ->
-    <<(binary_reverse(T))/binary,H>>.
-
-maybe_user_at(<<>>) -> <<>>;
+%% TODO test this case (server-only jid)
+%%maybe_user_at(<<>>) -> <<>>;
 maybe_user_at(User) -> <<User/binary, "@">>.
-

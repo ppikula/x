@@ -3,10 +3,54 @@
 -include_lib("proper/include/proper.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
-%%
-%%  Simple tests
-%%
+from_bin_to_bin_test_() ->
+    B = <<"hello@world.com">>,
+    ?_assertEqual(B,
+                  x_jid:to_bin(x_jid:from_bin(B))).
 
+from_bin_to_bin_w_resource_test_() ->
+    B = <<"hello@world.com/pc">>,
+    ?_assertEqual(B,
+                  x_jid:to_bin(x_jid:from_bin(B))).
+
+to_bin_from_bin_test_() ->
+    Jid = x_jid:new(<<"super">>,<<"hero.com">>),
+    ?_assertEqual(Jid,
+                  x_jid:from_bin(x_jid:to_bin(Jid))).
+
+to_bin_from_bin_w_resource_test_() ->
+    Jid = x_jid:new(<<"super">>,<<"hero.com">>,<<"batmobile">>),
+    ?_assertEqual(Jid,
+                  x_jid:from_bin(x_jid:to_bin(Jid))).
+
+same_resource_is_full_equality_test_() ->
+    J = x_jid:from_bin(<<"a@b.c/resource-1">>),
+    ?_assert(x_jid:is_same_resource(J,J)).
+
+same_resource_is_false_for_same_user_different_resource_test_() ->
+    R1 = x_jid:from_bin(<<"a@b.c/resource-10">>),
+    R2 = x_jid:from_bin(<<"a@b.c/resource-99">>),
+    ?_assertNot(x_jid:is_same_resource(R1,R2)).
+
+same_resource_is_false_for_same_user_different_domain_test_() ->
+    R1 = x_jid:from_bin(<<"a@x.y/resource-1">>),
+    R2 = x_jid:from_bin(<<"a@b.c/resource-1">>),
+    ?_assertNot(x_jid:is_same_resource(R1,R2)).
+
+same_resource_is_false_for_different_different_same_domain_resource_test_() ->
+    R1 = x_jid:from_bin(<<"a@b.c/resource-1">>),
+    R2 = x_jid:from_bin(<<"z@b.c/resource-1">>),
+    ?_assertNot(x_jid:is_same_resource(R1,R2)).
+
+has_same_domain_is_true_if_domains_match_test_() ->
+    R1 = x_jid:from_bin(<<"a@b.c/resource-1">>),
+    R2 = x_jid:from_bin(<<"z@b.c/resource-99">>),
+    ?_assert(x_jid:has_same_domain(R1,R2)).
+
+has_same_domain_is_false_if_domains_differ_test_() ->
+    R1 = x_jid:from_bin(<<"a@b.c/resource-1">>),
+    R2 = x_jid:from_bin(<<"a@x.y/resource-1">>),
+    ?_assertNot(x_jid:has_same_domain(R1,R2)).
 
 bare_jid_decomposition_test() ->
     property(new_bare_jid,
