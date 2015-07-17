@@ -7,6 +7,7 @@
 -export([domain/1]).
 -export([resource/1]).
 -export([bare/1]).
+-export([is_jid/1]).
 -export([is_bare_jid/1]).
 -export([is_full_jid/1]).
 -export([is_same_user/2]).
@@ -39,6 +40,10 @@
 -type username() :: binary().
 -type domain() :: binary().
 -type resource() :: binary().
+
+-spec is_jid(any()) -> boolean().
+is_jid(J) when is_record(J, full_jid); is_record(J,bare_jid) -> true;
+is_jid(_) -> false.
 
 -spec new(username(), domain(), resource()) -> full_jid().
 new(User, Domain, Resource) when is_binary(User), is_binary(Domain), is_binary(Resource) ->
