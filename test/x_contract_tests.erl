@@ -6,21 +6,26 @@ contract_passes_with_ok_test_()->
                  x_contract:check(1, fun is_number/1)).
 
 contract_fails_when_pred_returns_false_test_()->
-    ?_assertError({contract_failed, []},
-                  x_contract:check([], fun is_number/1)).
+    Pred = fun is_number/1,
+    ?_assertError({contract_failed, [], {Pred, false}},
+                  x_contract:check([], Pred)).
 
 contract_fails_when_pred_returns_non_boolean_test_()->
-    ?_assertError({contract_failed, {[], ok}},
-                  x_contract:check([], fun(_) -> ok end)).
+    Pred = fun(_) -> ok end,
+    ?_assertError({contract_failed, [], {Pred, ok}},
+                  x_contract:check([], Pred)).
 
 contract_fails_when_pred_crashes_1_test_()->
-    ?_assertError({contract_failed, {y, function_clause}},
-                  x_contract:check(y, fun(x) -> true end)).
+    Pred = fun(x) -> true end,
+    ?_assertError({contract_failed, y, {Pred, {error, function_clause}}},
+                  x_contract:check(y, Pred)).
 
 contract_fails_when_pred_crashes_2_test_()->
-    ?_assertError({contract_failed, {y, badarg}},
-                  x_contract:check(y, fun(L)-> length(L) == 1 end)).
+    Pred = fun(L)-> length(L) == 1 end,
+    ?_assertError({contract_failed, y, {Pred, {error, badarg}}},
+                  x_contract:check(y, Pred)).
 
 contract_fails_when_pred_crashes_3_test_()->
-    ?_assertError({contract_failed, {y, undef}},
-                  x_contract:check(y, fun not_defined:anywhere/1)).
+    Pred = fun not_defined:anywhere/1,
+    ?_assertError({contract_failed, y, {Pred, {error, undef}}},
+                  x_contract:check(y, Pred)).

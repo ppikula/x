@@ -5,8 +5,11 @@
 check(Val, Pred) ->
     try Pred(Val) of
         true -> ok;
-        false -> error({contract_failed, Val});
-        Other -> error({contract_failed, {Val, Other}})
-    catch _:R ->
-            error({contract_failed, {Val, R}})
+        Other -> fail(Val, Pred, Other)
+    catch E:R ->
+            fail(Val, Pred, {E,R})
     end.
+
+-spec fail(any(), fun((any())->boolean()), any()) -> no_return().
+fail(Value, Predicate, PredicateResult) ->
+    error({contract_failed, Value, {Predicate, PredicateResult}}).

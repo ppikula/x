@@ -14,12 +14,12 @@ is_message_rejects_non_messages_test_()->
 
 from_must_contain_a_jid_test_() ->
   ?_assertError
-     ({contract_failed, notjid},
+     ({contract_failed, notjid, _},
       x_message:new(notjid, x_jid:from_bin(<<"to@x.y">>), <<"a">>)).
 
 to_must_contain_a_jid_test_() ->
   ?_assertError
-     ({contract_failed, {a,tuple}},
+     ({contract_failed, {a,tuple}, _},
       x_message:new(x_jid:from_bin(<<"to@x.y">>), {a,tuple}, <<"a">>)).
 
 a_message_implements_Addressable_from_test_() ->
