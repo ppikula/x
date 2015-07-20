@@ -13,6 +13,23 @@ from_bin_to_bin_w_resource_test_() ->
     ?_assertEqual(B,
                   x_jid:to_bin(x_jid:from_bin(B))).
 
+from_bin_to_bin_host_only_test_() ->
+    B = <<"localhost">>,
+    ?_assertEqual(B,
+                  x_jid:to_bin(x_jid:from_bin(B))).
+
+from_bin_at_without_user_test_() ->
+    B = <<"@localhost">>,
+    ?_assertThrow(malformed_jid,x_jid:from_bin(B)).
+
+from_bin_multiple_at_test_() ->
+    B = <<"pawel@pawel@localhost">>,
+    ?_assertThrow(malformed_jid, x_jid:from_bin(B)).
+
+from_bin_multiple_slashes_test_() ->
+    B = <<"pawel@kanku/res1/res2">>,
+    ?_assertThrow(malformed_jid, x_jid:from_bin(B)).
+
 to_bin_from_bin_test_() ->
     Jid = x_jid:new(<<"super">>,<<"hero.com">>),
     ?_assertEqual(Jid,
@@ -20,6 +37,11 @@ to_bin_from_bin_test_() ->
 
 to_bin_from_bin_w_resource_test_() ->
     Jid = x_jid:new(<<"super">>,<<"hero.com">>,<<"batmobile">>),
+    ?_assertEqual(Jid,
+                  x_jid:from_bin(x_jid:to_bin(Jid))).
+
+to_bin_from_bin_hostonly_test_() ->
+    Jid = x_jid:new(<<>>,<<"hero.com">>,<<"batmobile">>),
     ?_assertEqual(Jid,
                   x_jid:from_bin(x_jid:to_bin(Jid))).
 

@@ -46,13 +46,16 @@ is_jid(J) when is_record(J, full_jid); is_record(J,bare_jid) -> true;
 is_jid(_) -> false.
 
 -spec new(username(), domain(), resource()) -> full_jid().
-new(User, Domain, Resource) when is_binary(User), is_binary(Domain), is_binary(Resource) ->
-    %% FIXME check contracts
+new(User, Domain, Resource) ->
+    x_contract:check(User, fun is_binary/1),
+    x_contract:check(Domain, fun is_binary/1),
+    x_contract:check(Resource, fun is_binary/1),
     #full_jid{username = User, domain = Domain, resource = Resource}.
 
 -spec new(username(), domain()) -> bare_jid().
-new(User, Domain) when is_binary(User), is_binary(Domain) ->
-    %% FIXME check contracts
+new(User, Domain) ->
+    x_contract:check(User, fun is_binary/1),
+    x_contract:check(Domain, fun is_binary/1),
     #bare_jid{username = User, domain = Domain}.
 
 -spec to_bin(jid()) -> binary().
@@ -106,12 +109,20 @@ has_same_domain(JID1, JID2) ->
 -spec parse_jid_elements(binary()) -> {username(), domain()} |
                                       {username(), domain(), resource()}.
 parse_jid_elements(Bin) ->
-    [User, Rest] = binary:split(Bin, <<"@">>),
-    case binary:split(Rest, <<"/">>) of
+    [User, Rest] = parse_user_part(Bin),
+    case binary:split(Rest, <<"/">>, [global]) of
         [Domain] -> {User,Domain};
-        [Domain, Resource] -> {User,Domain,Resource}
+        [Domain, Resource] -> {User,Domain,Resource};
+        _ -> throw(malformed_jid)
     end.
 
-%% TODO test this case (server-only jid)
-%%maybe_user_at(<<>>) -> <<>>;
+parse_user_part(Bin) ->
+    case binary:split(Bin, <<"@">>, [global]) of
+        [Rest] -> [<<>>, Rest];
+        [<<>>, _Rest]  -> throw(malformed_jid); %% alone '@'
+        [_User, _Rest] = R -> R;
+        _ -> throw(malformed_jid) % more than one '@'
+    end.
+
+maybe_user_at(<<>>) -> <<>>;
 maybe_user_at(User) -> <<User/binary, "@">>.
