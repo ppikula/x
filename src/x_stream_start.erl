@@ -8,7 +8,7 @@
 -export([is_stream_start/1]).
 
 %% convert to exml
--behaviour(x_Xmlable).
+-behaviour(x_exmlable).
 -export([to_exmlel/1]).
 
 %% main type
@@ -34,5 +34,5 @@ to_exmlel(StreamStart) ->
     #x_stream_start{to = Domain, lang = Lang, version = Version} = StreamStart,
     Attrs = [{<<"to">>, Domain},
              {<<"xml:lang">>, erlang:atom_to_binary(Lang, utf8)},
-             {<<"version">>, float_to_binary(Version,[{decimals,1}])}],
+             {<<"version">>, float_to_binary(Version, [{decimals, 1}])}],
     #xmlstreamstart{name = <<"stream:stream">>, attrs = Attrs}.

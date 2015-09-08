@@ -27,11 +27,11 @@ a_message_implements_Addressable_from_test_() ->
   To = x_jid:from_bin(<<"recipient@foo.com">>),
   ?_assert(x_jid:is_same_user
              (From,
-              x_Addressable:from(x_message:new(From, To,<<"!">>)))).
+              x_addressable:from(x_message:new(From, To,<<"!">>)))).
 
 a_message_implements_Addressable_to_test_() ->
   From = x_jid:from_bin(<<"sender@bar.com">>),
   To = x_jid:from_bin(<<"recipient@bar.com">>),
   ?_assert(x_jid:is_same_user
              (To,
-              x_Addressable:to(x_message:new(From, To,<<"ole!">>)))).
+              x_addressable:to(x_message:new(From, To,<<"ole!">>)))).

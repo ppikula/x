@@ -5,12 +5,12 @@
 stream_start_test_() ->
     Expected  = <<"<stream:stream version='1.0' xml:lang='en' to='localhost'>">>,
     Header = x_stream_start:new(x_jid:from_bin(<<"localhost">>), en, 1.0),
-    ?_assertEqual(Expected, exml:to_binary((x_Xmlable:to_exmlel(Header)))).
+    ?_assertEqual(Expected, exml:to_binary((x_exmlable:to_exmlel(Header)))).
 
 stream_end_test_() ->
     Expected = <<"</stream:stream>">>,
     Trailer = x_stream_end:new(),
-    ?_assertEqual(Expected, exml:to_binary(x_Xmlable:to_exmlel(Trailer))).
+    ?_assertEqual(Expected, exml:to_binary(x_exmlable:to_exmlel(Trailer))).
 
 is_stream_start_accepts_valid_stream_start_test_() ->
     S = x_stream_start:new(x_jid:from_bin(<<"localhost10.io">>), pl, 1.0),

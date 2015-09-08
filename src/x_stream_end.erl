@@ -8,7 +8,7 @@
 -export([is_stream_end/1]).
 
 %% convert to exml
--behaviour(x_Xmlable).
+-behaviour(x_exmlable).
 -export([to_exmlel/1]).
 
 %% main type
@@ -23,6 +23,7 @@ new() ->
 is_stream_end(#x_stream_end{}) -> true;
 is_stream_end(_) -> false.
 
+-spec to_exmlel(x_stream_end()) -> #xmlstreamend{}.
 to_exmlel(#x_stream_end{}) ->
     #xmlstreamend{name = <<"stream:stream">>}.
 

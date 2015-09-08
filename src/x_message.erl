@@ -1,7 +1,7 @@
 -module(x_message).
 -export([new/3, is_message/1]).
 
--behaviour(x_Addressable).
+-behaviour(x_addressable).
 -export([from/1, to/1]).
 
 -export_type([x_message/0]).

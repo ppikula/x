@@ -1,4 +1,4 @@
--module(x_Xmlable).
+-module(x_exmlable).
 
 -include_lib("exml/include/exml_stream.hrl").
 
