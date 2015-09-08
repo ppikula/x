@@ -1,3 +1,5 @@
+%% vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2
+%% -*- mode: erlang; erlang-indent-level: 2 -*- %%
 -module(x).
 
 -export_type([iso_639_1_lang/0]).
