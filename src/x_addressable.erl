@@ -1,4 +1,4 @@
--module(x_Addressable).
+-module(x_addressable).
 
 -export([from/1, to/1]).
 
