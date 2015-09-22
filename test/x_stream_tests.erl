@@ -4,7 +4,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 stream_start_test_() ->
-  Expected  = <<"<stream:stream version='1.0' xml:lang='en' to='localhost'>">>,
+  Expected  = <<"<stream:stream to='localhost' xml:lang='en' version='1.0'>">>,
   Header = x_stream_start:new(x_jid:from_bin(<<"localhost">>), en, 1.0),
   ?_assertEqual(Expected, exml:to_binary((x_exmlable:to_exmlel(Header)))).
 

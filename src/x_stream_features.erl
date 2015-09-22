@@ -23,7 +23,7 @@
 -record(complex_feature, {
           name :: binary(),
           ns :: x_ns:x_ns(),
-          children :: [xmlstreamelement()]}).
+          children :: [exml:element()]}).
 
 -record(x_stream_features, {features = [] :: [feature()]}).
 
@@ -46,7 +46,7 @@ new(#xmlel{name = <<"stream:features">>, children = C}) ->
 add(Features, FeatureName, FeatureNamespace) ->
   add(Features, FeatureName, FeatureNamespace, []).
 
--spec add(x_stream_features(), binary(), x_ns:x_ns(), [xmlstreamelement()]) ->
+-spec add(x_stream_features(), binary(), x_ns:x_ns(), [exml:element()]) ->
   x_stream_features().
 add(Features, FeatureName, FeatureNamespace, Subelements) ->
   case has_feature(Features, FeatureNamespace, FeatureName) of
@@ -69,7 +69,7 @@ has_feature(Features, Namespace, Name) ->
       end,
   1 == erlang:length(lists:filter(F, CurrentFeatures)).
 
--spec to_exmlel(tuple()) -> #xmlel{}.
+-spec to_exmlel(tuple()) -> exml_stream:element().
 to_exmlel(#x_stream_features{features = Features}) ->
   EXMLFeatures = lists:map(fun to_exmlel/1, Features),
   #xmlel{name = <<"stream:features">>, children = EXMLFeatures};
@@ -82,13 +82,13 @@ to_exmlel(#complex_feature{name = N, ns = Namespace, children = C}) ->
 feature(Name, NS) ->
   #simple_feature{name = Name, ns = NS}.
 
--spec feature(binary(), x_ns:x_ns(), [xmlstreamelement()]) -> feature().
+-spec feature(binary(), x_ns:x_ns(), [exml:element()]) -> feature().
 feature(Name, NS, []) ->
   feature(Name, NS);
 feature(Name, NS, SubEl) ->
   #complex_feature{name = Name, ns = NS, children = SubEl}.
 
--spec feature_from_exml(xmlstreamelement()) -> feature().
+-spec feature_from_exml(exml:element()) -> feature().
 feature_from_exml(#xmlel{name = Name, children = C} = El) ->
   NS = x_ns:new(exml_query:attr(El, <<"xmlns">>, <<>>)),
   feature(Name, NS, C).
