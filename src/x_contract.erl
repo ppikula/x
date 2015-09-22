@@ -9,7 +9,7 @@ check(Val, Pred) ->
     true -> ok;
     Other -> fail(Val, Pred, Other)
   catch E:R ->
-          fail(Val, Pred, {E,R})
+          fail(Val, Pred, {E, R})
   end.
 
 -spec fail(any(), fun((any())->boolean()), any()) -> no_return().

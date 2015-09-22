@@ -25,7 +25,7 @@ new() ->
 is_stream_end(#x_stream_end{}) -> true;
 is_stream_end(_) -> false.
 
--spec to_exmlel(x_stream_end()) -> #xmlstreamend{}.
+-spec to_exmlel(x_stream_end()) -> exml_stream:stop().
 to_exmlel(#x_stream_end{}) ->
   #xmlstreamend{name = <<"stream:stream">>}.
 

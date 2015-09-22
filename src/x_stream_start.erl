@@ -31,7 +31,7 @@ new(Domain, Lang, Version) ->
 is_stream_start(#x_stream_start{}) -> true;
 is_stream_start(_) -> false.
 
--spec to_exmlel(x_stream_start()) -> #xmlstreamstart{}.
+-spec to_exmlel(x_stream_start()) -> exml_stream:start().
 to_exmlel(StreamStart) ->
   #x_stream_start{to = Domain, lang = Lang, version = Version} = StreamStart,
   Attrs = [{<<"to">>, Domain},

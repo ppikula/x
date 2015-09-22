@@ -62,9 +62,9 @@ new(User, Domain) ->
 
 -spec to_bin(jid()) -> binary().
 to_bin(#full_jid{username = U, domain = D, resource = R}) ->
-  <<(maybe_user_at(U))/binary,D/binary,"/",R/binary>>;
+  <<(maybe_user_at(U))/binary, D/binary, "/", R/binary>>;
 to_bin(#bare_jid{username = U, domain = D}) ->
-  <<(maybe_user_at(U))/binary,D/binary>>.
+  <<(maybe_user_at(U))/binary, D/binary>>.
 
 -spec from_bin(binary()) -> jid().
 from_bin(Bin) when is_binary(Bin) ->
@@ -113,8 +113,8 @@ has_same_domain(JID1, JID2) ->
 parse_jid_elements(Bin) ->
   [User, Rest] = parse_user_part(Bin),
   case binary:split(Rest, <<"/">>, [global]) of
-    [Domain] -> {User,Domain};
-    [Domain, Resource] -> {User,Domain,Resource};
+    [Domain] -> {User, Domain};
+    [Domain, Resource] -> {User, Domain, Resource};
     _ -> throw(malformed_jid)
   end.
 
