@@ -5,8 +5,8 @@
 -export([to_exmlel/1]).
 
 %% xmlstreamelement - both xmlel and streams start/stop
--callback to_exmlel(any()) -> xmlstreamelement().
+-callback to_exmlel(any()) -> exml:element().
 
--spec to_exmlel(tuple()) -> xmlstreamelement().
+-spec to_exmlel(tuple()) -> exml:element().
 to_exmlel(Xmlable) ->
     (x_implementation:module(Xmlable)):to_exmlel(Xmlable).
