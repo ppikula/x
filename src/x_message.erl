@@ -1,3 +1,5 @@
+%% vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2
+%% -*- mode: erlang; erlang-indent-level: 2 -*- %%
 -module(x_message).
 -export([new/3, is_message/1]).
 
@@ -11,9 +13,9 @@
 
 -spec new(x_jid:jid(), x_jid:jid(), iolist()) -> x_message().
 new(From, To, _Body) ->
-    x_contract:check(From, fun x_jid:is_jid/1),
-    x_contract:check(To, fun x_jid:is_jid/1),
-    #x_message{from = From, to = To}.
+  x_contract:check(From, fun x_jid:is_jid/1),
+  x_contract:check(To, fun x_jid:is_jid/1),
+  #x_message{from = From, to = To}.
 
 -spec is_message(any()) -> boolean().
 is_message(#x_message{}) -> true;

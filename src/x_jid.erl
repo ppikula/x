@@ -1,3 +1,5 @@
+%% vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2
+%% -*- mode: erlang; erlang-indent-level: 2 -*- %%
 -module(x_jid).
 
 -export([new/2, new/3]).
@@ -47,29 +49,29 @@ is_jid(_) -> false.
 
 -spec new(username(), domain(), resource()) -> full_jid().
 new(User, Domain, Resource) ->
-    x_contract:check(User, fun is_binary/1),
-    x_contract:check(Domain, fun is_binary/1),
-    x_contract:check(Resource, fun is_binary/1),
-    #full_jid{username = User, domain = Domain, resource = Resource}.
+  x_contract:check(User, fun is_binary/1),
+  x_contract:check(Domain, fun is_binary/1),
+  x_contract:check(Resource, fun is_binary/1),
+  #full_jid{username = User, domain = Domain, resource = Resource}.
 
 -spec new(username(), domain()) -> bare_jid().
 new(User, Domain) ->
-    x_contract:check(User, fun is_binary/1),
-    x_contract:check(Domain, fun is_binary/1),
-    #bare_jid{username = User, domain = Domain}.
+  x_contract:check(User, fun is_binary/1),
+  x_contract:check(Domain, fun is_binary/1),
+  #bare_jid{username = User, domain = Domain}.
 
 -spec to_bin(jid()) -> binary().
 to_bin(#full_jid{username = U, domain = D, resource = R}) ->
-    <<(maybe_user_at(U))/binary,D/binary,"/",R/binary>>;
+  <<(maybe_user_at(U))/binary, D/binary, "/", R/binary>>;
 to_bin(#bare_jid{username = U, domain = D}) ->
-    <<(maybe_user_at(U))/binary,D/binary>>.
+  <<(maybe_user_at(U))/binary, D/binary>>.
 
 -spec from_bin(binary()) -> jid().
 from_bin(Bin) when is_binary(Bin) ->
-    case parse_jid_elements(Bin) of
-        {U, D} -> #bare_jid{username = U, domain = D};
-        {U, D, R} -> #full_jid{username = U, domain = D, resource = R}
-    end.
+  case parse_jid_elements(Bin) of
+    {U, D} -> #bare_jid{username = U, domain = D};
+    {U, D, R} -> #full_jid{username = U, domain = D, resource = R}
+  end.
 
 -spec username(jid()) -> username().
 username(#full_jid{username = U}) -> U;
@@ -96,7 +98,7 @@ is_full_jid(#full_jid{}) -> true.
 
 -spec is_same_user(jid(), jid()) -> boolean().
 is_same_user(JID1, JID2) ->
-    bare(JID1) == bare(JID2).
+  bare(JID1) == bare(JID2).
 
 -spec is_same_resource(full_jid(), full_jid()) -> boolean().
 is_same_resource(#full_jid{} = JID, #full_jid{} = JID) -> true;
@@ -104,25 +106,25 @@ is_same_resource(#full_jid{} = _JID1, #full_jid{} = _JID2) -> false.
 
 -spec has_same_domain(jid(), jid()) -> boolean().
 has_same_domain(JID1, JID2) ->
-    domain(JID1) == domain(JID2).
+  domain(JID1) == domain(JID2).
 
 -spec parse_jid_elements(binary()) -> {username(), domain()} |
                                       {username(), domain(), resource()}.
 parse_jid_elements(Bin) ->
-    [User, Rest] = parse_user_part(Bin),
-    case binary:split(Rest, <<"/">>, [global]) of
-        [Domain] -> {User,Domain};
-        [Domain, Resource] -> {User,Domain,Resource};
-        _ -> throw(malformed_jid)
-    end.
+  [User, Rest] = parse_user_part(Bin),
+  case binary:split(Rest, <<"/">>, [global]) of
+    [Domain] -> {User, Domain};
+    [Domain, Resource] -> {User, Domain, Resource};
+    _ -> throw(malformed_jid)
+  end.
 
 parse_user_part(Bin) ->
-    case binary:split(Bin, <<"@">>, [global]) of
-        [Rest] -> [<<>>, Rest];
-        [<<>>, _Rest]  -> throw(malformed_jid); %% alone '@'
-        [_User, _Rest] = R -> R;
-        _ -> throw(malformed_jid) % more than one '@'
-    end.
+  case binary:split(Bin, <<"@">>, [global]) of
+    [Rest] -> [<<>>, Rest];
+    [<<>>, _Rest]  -> throw(malformed_jid); %% alone '@'
+    [_User, _Rest] = R -> R;
+    _ -> throw(malformed_jid) % more than one '@'
+  end.
 
 maybe_user_at(<<>>) -> <<>>;
 maybe_user_at(User) -> <<User/binary, "@">>.

@@ -1,3 +1,5 @@
+%% vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2
+%% -*- mode: erlang; erlang-indent-level: 2 -*- %%
 -module(x_stream_end).
 -include_lib("exml/include/exml_stream.hrl").
 
@@ -17,13 +19,13 @@
 
 -spec new() -> x_stream_end().
 new() ->
-    #x_stream_end{}.
+  #x_stream_end{}.
 
 -spec is_stream_end(any()) -> boolean().
 is_stream_end(#x_stream_end{}) -> true;
 is_stream_end(_) -> false.
 
--spec to_exmlel(x_stream_end()) -> #xmlstreamend{}.
+-spec to_exmlel(x_stream_end()) -> exml_stream:stop().
 to_exmlel(#x_stream_end{}) ->
-    #xmlstreamend{name = <<"stream:stream">>}.
+  #xmlstreamend{name = <<"stream:stream">>}.
 
